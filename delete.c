@@ -12,15 +12,18 @@ int main(){
     printf("Enter element to delete : ");
     int del;
     scanf("%d", &del);
+
     for (int i = 0; i < n; i++){
         if (a[i] == del){
             for (int j = i; j < n-1; j++){
                 a[j] = a[j+1];
             }
-            break;
+            n--;
+            i--;
         }
     }
-    for (int i = 0; i < n-1; i++){
+
+    for (int i = 0; i < n; i++){
         printf("%d ", a[i]);
     }
     return 0;

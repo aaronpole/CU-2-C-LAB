@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aaron Paul</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: #6B7B6E;
+            color: #1a1a1a;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .header {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            font-size: 1.2rem;
+        }
+
+        .main-title {
+            font-size: 5rem;
+            font-weight: 400;
+            line-height: 1.1;
+            margin: 15vh 0 1rem;
+            max-width: 800px;
+        }
+
+        .subtitle {
+            font-size: 5rem;
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            max-width: 800px;
+        }
+
+        .start-button {
+            font-size: 1.2rem;
+            background: none;
+            border: none;
+            color: #1a1a1a;
+            cursor: pointer;
+            padding: 1rem 0;
+            text-align: left;
+            text-decoration: underline;
+            transition: opacity 0.3s;
+        }
+
+        .start-button:hover {
+            opacity: 0.7;
+        }
+
+        .game-container {
+            display: none;
+            margin-top: 15vh;
+        }
+
+        .game-container.active {
+            display: block;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            max-width: 600px;
+            margin: 2rem 0;
+        }
+
+        .grid-item {
+            aspect-ratio: 1;
+            background: none;
+            border: 1px solid #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            padding: 1rem;
+        }
+
+        .grid-item:hover {
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        .info-text {
+            font-size: 1.2rem;
+            line-height: 1.4;
+            max-width: 80%;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            right: 2rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        .grid-item.black-text {
+            color: #000000;
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        .grid-item.white-text {
+            color: #ffffff;
+            background-color: rgba(0,0,0,0.8);
+        }
+
+        .score-board {
+            margin: 20px 0;
+            font-size: 1.2rem;
+        }
+
+        .ending-section {
+            text-align: center;
+            margin-top: 20vh;
+        }
+
+        .ending-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .ending-section button {
+            font-size: 1.2rem;
+            background: none;
+            border: 1px solid #1a1a1a;
+            color: #1a1a1a;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .ending-section button:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Aaron Paul</div>
+
+    <main>
+        <h1 class="main-title">Creative Developer</h1>
+        <h2 class="subtitle">B.Tech CSBS Student</h2>
+        <button class="start-button" onclick="startGame()">Let's Play →</button>
+
+        <div class="game-container">
+            <p class="info-text">Player 1 vs Player 2 - Best of 3</p>
+            <div class="score-board">
+                <div>Black: <span id="score-black">0</span></div>
+                <div>White: <span id="score-white">0</span></div>
+                <div>Draws: <span id="score-draws">0</span></div>
+            </div>
+            <div class="grid-container">
+                <div class="grid-item" onclick="reveal(0)"></div>
+                <div class="grid-item" onclick="reveal(1)"></div>
+                <div class="grid-item" onclick="reveal(2)"></div>
+                <div class="grid-item" onclick="reveal(3)"></div>
+                <div class="grid-item" onclick="reveal(4)"></div>
+                <div class="grid-item" onclick="reveal(5)"></div>
+                <div class="grid-item" onclick="reveal(6)"></div>
+                <div class="grid-item" onclick="reveal(7)"></div>
+                <div class="grid-item" onclick="reveal(8)"></div>
+            </div>
+        </div>
+
+        <div class="ending-section" style="display: none;">
+            <h2 id="winner-message"></h2>
+            <p>Thanks for playing!</p>
+            <button onclick="returnHome()">Return Home</button>
+        </div>
+    </main>
+
+    <div class="footer">
+        <span>Portfolio:01</span>
+        <span>MEC Thrikkakara</span>
+        <span>2024</span>
+    </div>
+
+    <script>
+        // Two sets of portfolio information
+        const setOneInfo = [
+            "First Year Student",
+            "Stock Market Enthusiast",
+            "Python Enthusiast",
+            "Guitarist",
+            "Problem Solver",
+            "Tech Explorer",
+            "Creative Thinker",
+            "Team Player",
+            "Love For Life"
+        ];
+
+        const setTwoInfo = [
+            "HTML & CSS",
+            "JavaScript",
+            "Python",
+            "C",
+            "SQL",
+            "Git & GitHub",
+            "FL Studio",
+            "Flask (Beginner)",
+            "Jinja (Beginner)"
+        ];
+
+        let currentPlayer = 'black';
+        let gameBoard = ['', '', '', '', '', '', '', '', ''];
+        let gameActive = true;
+        let scores = { black: 0, white: 0, draws: 0 };
+        let currentSet = true; // true for setOneInfo, false for setTwoInfo
+
+        function reveal(index) {
+            if (gameBoard[index] === '' && gameActive) {
+                const cell = document.getElementsByClassName('grid-item')[index];
+                gameBoard[index] = currentPlayer;
+
+                // Display info based on current player and info set
+                const infoSet = currentSet ? setOneInfo : setTwoInfo;
+                cell.innerText = infoSet[index];
+                cell.classList.add(`${currentPlayer}-text`);
+
+                if (checkWin()) {
+                    scores[currentPlayer]++;
+                    updateScoreBoard();
+                    if (scores[currentPlayer] >= 2) {
+                        document.querySelector('.info-text').innerText = 
+                            `${currentPlayer.toUpperCase()} wins the match!`;
+                        gameActive = false;
+                        showEndingSection(`${currentPlayer.toUpperCase()} wins the match!`);
+                    } else {
+                        setTimeout(resetRound, 1500);
+                    }
+                } else if (gameBoard.indexOf('') === -1) {
+                    scores.draws++;
+                    updateScoreBoard();
+                    setTimeout(resetRound, 1500);
+                } else {
+                    currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
+                    document.querySelector('.info-text').innerText = 
+                        `${currentPlayer.toUpperCase()}'s turn`;
+                }
+            }
+        }
+
+        function checkWin() {
+            const winConditions = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+
+            return winConditions.some(condition => {
+                return condition.every(index => {
+                    return gameBoard[index] === currentPlayer;
+                });
+            });
+        }
+
+        function resetRound() {
+            gameBoard = ['', '', '', '', '', '', '', '', ''];
+            gameActive = true;
+            currentPlayer = 'black';
+            currentSet = !currentSet; // Switch to other info set
+            
+            const cells = document.getElementsByClassName('grid-item');
+            for (let cell of cells) {
+                cell.innerText = '';
+                cell.classList.remove('black-text', 'white-text');
+            }
+            
+            document.querySelector('.info-text').innerText = "BLACK's turn";
+        }
+
+        function updateScoreBoard() {
+            document.getElementById('score-black').innerText = scores.black;
+            document.getElementById('score-white').innerText = scores.white;
+            document.getElementById('score-draws').innerText = scores.draws;
+        }
+
+        function startGame() {
+            document.querySelector('.game-container').classList.add('active');
+            document.querySelector('.start-button').style.display = 'none';
+            resetRound();
+        }
+
+        function showEndingSection(message) {
+            document.querySelector('.game-container').classList.remove('active');
+            document.querySelector('.ending-section').style.display = 'block';
+            document.getElementById('winner-message').innerText = message;
+        }
+
+        function returnHome() {
+            document.querySelector('.ending-section').style.display = 'none';
+            document.querySelector('.start-button').style.display = 'block';
+            document.querySelector('.game-container').classList.remove('active');
+            scores = { black: 0, white: 0, draws: 0 };
+            updateScoreBoard();
+        }
+    </script>
+</body>
+</html>
