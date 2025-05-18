@@ -13,6 +13,6 @@ int main(){
     }
     for (int i = 0; i < n; i++){
         printf("%d ", c[i]);
-    }34
+    }
     return 0;
 }

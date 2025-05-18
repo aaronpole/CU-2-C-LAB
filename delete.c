@@ -18,8 +18,8 @@ int main(){
             for (int j = i; j < n-1; j++){
                 a[j] = a[j+1];
             }
-            n--;
-            i--;
+            n--; //Decrease array sixe
+            i--; //Recheck this index because now it has diiferent element which might be i
         }
     }
 
